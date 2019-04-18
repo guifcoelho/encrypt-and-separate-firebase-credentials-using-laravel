@@ -7,8 +7,8 @@
 
 This is a guide on how to deal with Firebase credentials json file in Laravel.
 
-* Laravel
-1. Install Laravel with `composer create-project --prefer-dist laravel/laravel [project]` but replace '[project]' with your project folder name
+### Laravel
+1. Install Laravel with `composer create-project --prefer-dist laravel/laravel [project]`
 1. Run `composer require defuse/php-encryption kreait/firebase-php` to install the encryption library and the Firebase PHP SDK
 1. Create folders 'app/Services/Firebase/Controllers' and 'app/Services/Firebase/Keys' to add Firebase controllers and keys
 1. Change the 'config/services.php' file, adding at the end:
@@ -22,15 +22,15 @@ This is a guide on how to deal with Firebase credentials json file in Laravel.
 1. Run `encrypt-service-keys Firebase [credentials.json] [new_file].encrypt [encryption password]` to encrypt the Firebase credentials json file
 1. Save the encrypted file in a public repository
 
-* composer.json
+### composer.json
 1. In the composer.json file, add command into 'post-autoload-dump': `"@php artisan decrypt-service-keys Firebase credentials.json"`
 
-*Travis-CI
+### Travis-CI
 1. Create Travis .yml file
 1. Add 'APP_KEY', 'FIREBASE_KEY_ENCRYPTION_PASSWORD', 'FIREBASE_CREDENTIALS', and 'FIREBASE_CREDENTIALS_FILE_URL' into the environment variables
 1. Run tests
 
-* Heroku
+### Heroku
 1. Create app on Heroku
 1. Run `heroku buildpacks:set heroku/php`
 1. Add 'APP_KEY', 'FIREBASE_KEY_ENCRYPTION_PASSWORD', 'FIREBASE_CREDENTIALS', and 'FIREBASE_CREDENTIALS_FILE_URL' into the environment variables
