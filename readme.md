@@ -5,7 +5,7 @@
 </p>
 </center>
 
-This is a guide on how to deal with Firebase credentials json file in Laravel.
+Learn how to deploy a Laravel-Firebase app without the credentials keys in the code base.
 
 ### Laravel
 1. Install Laravel with `composer create-project --prefer-dist laravel/laravel [project]`
