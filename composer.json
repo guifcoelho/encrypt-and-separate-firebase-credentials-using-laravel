@@ -54,8 +54,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "php artisan download-service-keys Firebase FIREBASE_CREDENTIALS_FILE_URL",
-            "php artisan decrypt-service-keys Firebase credentials.encrypt credentials.json FIREBASE_KEY_ENCRYPTION_PASSWORD"
+            "@php artisan decrypt-service-keys Firebase credentials.json"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

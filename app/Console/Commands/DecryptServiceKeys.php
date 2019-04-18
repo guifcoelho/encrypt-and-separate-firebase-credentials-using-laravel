@@ -13,7 +13,7 @@ class DecryptServiceKeys extends Command
      *
      * @var string
      */
-    protected $signature = 'decrypt-service-keys {serviceName} {inputFileName} {outputFileName} {passwordEnv}';
+    protected $signature = 'decrypt-service-keys {serviceName} {outputFileName}';
 
     /**
      * The console command description.
@@ -41,30 +41,41 @@ class DecryptServiceKeys extends Command
     {
         $service = $this->argument('serviceName');
 
-        $inputFile = $this->argument('inputFileName');
+        $encryptedFile = app_path("Services/{$service}/Keys/credentials.encrypt");
         
-        $pathInputFile = app_path("Services/{$service}/Keys/{$inputFile}");
+        if($service == "Firebase"){
+            $downloadUrl = config('services.firebase.credentials_file_url');
+            $password = config('services.firebase.encryption_password');
+        }else{
+            return $this->error('Service not defined');
+        }
 
-        if(!file_exists($pathInputFile))
-            return $this->error("File '{$pathInputFile}' not found");
+        if($downloadUrl == null || empty($downloadUrl) || $downloadUrl == ''){
+            return $this->error('Download url not defined');
+        }
 
-        $outputFile = dirname($pathInputFile)."/{$this->argument('outputFileName')}";
-
-        $passwordEnv = $this->argument('passwordEnv');
-        if($passwordEnv == null)
-            return $this->error('Password environment variable not found');
-    
-        switch(strtolower($service)){
-            case 'firebase': $password = config('services.firebase.encryption_password'); break;
-            default: return $this->error('Service not defined');
+        if($password == null || empty($password) || $password == ''){
+            return $this->error('Decryption password not defined');
         }
 
         try{
-            File::decryptFileWithPassword($pathInputFile, $outputFile, $password);
+            file_put_contents($encryptedFile, fopen($downloadUrl, 'r'));
         }catch(\Exception $e){
-            return $this->error("File '{$pathInputFile}' was not decrypted");
+            return $this->error('It was not possible to download the file');
+        }
+
+        if(!file_exists($encryptedFile))
+            return $this->error("File '{$pathInputFile}' not found");
+
+        $outputFile = dirname($encryptedFile)."/{$this->argument('outputFileName')}";
+
+        try{
+            File::decryptFileWithPassword($encryptedFile, $outputFile, $password);
+            unlink($encryptedFile);
+        }catch(\Exception $e){
+            return $this->error("File '{$encryptedFile}' was not decrypted");
         }
         
-        return $this->info("File '{$pathInputFile}' decrypted into '{$outputFile}'");
+        return $this->info("File '{$encryptedFile}' decrypted into '{$outputFile}'");
     } 
 }
