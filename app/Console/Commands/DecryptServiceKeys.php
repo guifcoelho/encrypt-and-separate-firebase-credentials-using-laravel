@@ -6,21 +6,21 @@ use Illuminate\Console\Command;
 use Defuse\Crypto\File;
 use Dotenv\Dotenv;
 
-class EncryptServiceKeys extends Command
+class DecryptServiceKeys extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'encrypt-service-keys {serviceName} {inputFileName} {outputFileName} {encryptPassword}';
+    protected $signature = 'decrypt-service-keys {serviceName} {inputFileName} {outputFileName} {passwordEnv}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Encrypt service credentials file';
+    protected $description = 'Decrypt service credentials file';
 
     /**
      * Create a new command instance.
@@ -42,7 +42,7 @@ class EncryptServiceKeys extends Command
         $service = $this->argument('serviceName');
 
         $inputFile = $this->argument('inputFileName');
-
+        
         $pathInputFile = app_path("Services/{$service}/Keys/{$inputFile}");
 
         if(!file_exists($pathInputFile))
@@ -50,16 +50,21 @@ class EncryptServiceKeys extends Command
 
         $outputFile = dirname($pathInputFile)."/{$this->argument('outputFileName')}";
 
-        $encryptPassword = $this->argument('encryptPassword');
+        $passwordEnv = $this->argument('passwordEnv');
+        if($passwordEnv == null)
+            return $this->error('Password environment variable not found');
     
-        try{
-            
-            File::encryptFileWithPassword($pathInputFile, $outputFile, $encryptPassword);
-
-        }catch(\Exception $e){
-            return $this->error("Failed to encrypt '{$pathInputFile}'");
+        switch(strtolower($service)){
+            case 'firebase': $password = config('services.firebase.encryption_password'); break;
+            default: return $this->error('Service not defined');
         }
 
-        return $this->info("File '{$pathInputFile}' encrypted into '{$outputFile}'");
-    }
+        try{
+            File::decryptFileWithPassword($pathInputFile, $outputFile, $password);
+        }catch(\Exception $e){
+            return $this->error("File '{$pathInputFile}' was not decrypted");
+        }
+        
+        return $this->info("File '{$pathInputFile}' decrypted into '{$outputFile}'");
+    } 
 }

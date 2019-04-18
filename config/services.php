@@ -44,4 +44,8 @@ return [
         ],
     ],
 
+    'firebase' => [
+        'encryption_password' => env('FIREBASE_KEY_ENCRYPTION_PASSWORD')
+    ]
+
 ];
