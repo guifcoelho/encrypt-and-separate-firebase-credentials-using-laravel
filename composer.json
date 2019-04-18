@@ -54,7 +54,7 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi",
-            "wget -P ./app/Services/Firebase/Keys FIREBASE_CREDENTIALS_FILE_URL",
+            "php artisan download-service-keys Firebase FIREBASE_CREDENTIALS_FILE_URL",
             "php artisan decrypt-service-keys Firebase credentials.encrypt credentials.json FIREBASE_KEY_ENCRYPTION_PASSWORD"
         ],
         "post-root-package-install": [
