@@ -5,7 +5,7 @@
 </p>
 </center>
 
-Learn how to deploy a Laravel-Firebase app without the credentials keys in the code base.
+Learn how to deploy a Laravel-Firebase web app without the credentials json file in the code base.
 
 ### Laravel
 1. Install Laravel with `composer create-project --prefer-dist laravel/laravel [project]`
@@ -36,6 +36,7 @@ Learn how to deploy a Laravel-Firebase app without the credentials keys in the c
 1. Add 'APP_KEY', 'FIREBASE_KEY_ENCRYPTION_PASSWORD', 'FIREBASE_CREDENTIALS', and 'FIREBASE_CREDENTIALS_FILE_URL' into the environment variables
 1. Create Procfile
 1. Run `composer require --dev heroku/heroku-buildpack-php`
+1. Link app to your GitHub repo or run `git push heroku master`
 
 
 ## License
